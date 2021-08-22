@@ -81,34 +81,87 @@
           </div>
         </div>
         <script>
-          const getProducts = () => {
-            const url="https://striveschool-api.herokuapp.com/api/product/"
-            fetch(url,{
-              method: "GET",
-              headers:{
-                "Content-Type": "application/json",
-                "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTFkMGU3MTJkNTI2MjAwMTViNmRkMjEiLCJpYXQiOjE2MjkyOTQxOTMsImV4cCI6MTYzMDUwMzc5M30.XnOQr6Fx7ZY9OeWqYLc-CFjUxNxppJwzs8h_dVJmGzc"
-                },
-            })
-            .then(response =>response.json())
-            .then(data => makeProductCard(data))
-            .catch(error =>console.error(error))
+        //   const getProducts = () => {
+        //     const url="https://striveschool-api.herokuapp.com/api/product/"
+        //     fetch(url,{
+        //       method: "GET",
+        //       headers:{
+        //         "Content-Type": "application/json",
+        //         "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTFkMGU3MTJkNTI2MjAwMTViNmRkMjEiLCJpYXQiOjE2MjkyOTQxOTMsImV4cCI6MTYzMDUwMzc5M30.XnOQr6Fx7ZY9OeWqYLc-CFjUxNxppJwzs8h_dVJmGzc"
+        //         },
+        //     })
+        //     .then(response =>response.json())
+        //     .then(data => makeProductCard(data))
+        //     .catch(error =>console.error(error))
            
-        }
-          let productContainer = document.getElementById('products')
-          const makeProductCard = (productData) => {
-            productData.forEach(element => {
-              productContainer.innerHTML += `<div class="card">
-                                              <img src="${element.imageUrl}" class="card-img-top" alt="...">
-                                              <div class="card-body">
-                                                <h5 class="card-title">${element.name}</h5>
-                                                <p>${element.brand}</p>
-                                                <p>${element.price}</p>
-                                                <p class="${element.description}</p>
-                                                </div>
-                                            </div>`          
-            });
-          }
+        // }
+        //   let productContainer = document.getElementById('products')
+        //   const makeProductCard = (productData) => {
+        //     productData.forEach(element => {
+        //       productContainer.innerHTML += `<div class="card">
+        //                                       <img src="${element.imageUrl}" class="card-img-top" alt="...">
+        //                                       <div class="card-body">
+        //                                         <h5 class="card-title">${element.name}</h5>
+        //                                         <p>${element.brand}</p>
+        //                                         <p>${element.price}</p>
+        //                                         <p class="${element.description}</p>
+        //                                         </div>
+        //                                     </div>`          
+        //     });
+        //   }
+          const displayProducts = (array) => {
+  const main = document.querySelector(".main");
+  main.innerHTML = "";
+  array.forEach((product) => {
+    let date = new Date(product.createdAt).toLocaleString();
+    main.innerHTML += `          <div class="card mb-3">
+            <div class="row no-gutters">
+              <div class="col-md-4">
+                <img src="${product.imageUrl}" alt="product image" class="img-fluid" style="width: 200px; height: 200px"/>
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title"><a style="color: #333" href="/details.html?id=${product._id}">${product.name}</a></h5>
+                  <p class="card-text">
+                      <div class="card-rating">
+                          <span><i class="bi bi-star-fill"></i></span>
+                          <span><i class="bi bi-star-fill"></i></span>
+                          <span><i class="bi bi-star-fill"></i></span>
+                          <span><i class="bi bi-star-fill"></i></span>
+                          <span><i class="bi bi-star-fill"></i></span>
+                     </div>
+                     <div class="card-price">
+                         $${product.price}
+                     </div>
+                  </p>
+                  <div class="d-flex justify-content-between">
+                    <p class="card-text">
+                      <small class="text-muted">Posted on ${date}</small>
+                    </p>
+                    <a href="/details.html?id=${product._id}" class="btn btn-secondary">View Details</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+  });
+};
+
+const getProduct = async () => {
+  const response = await fetch(
+    "https://striveschool-api.herokuapp.com/api/product/",
+    {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTFjZTJiYjJkNTI2MjAwMTViNmRjOGUiLCJpYXQiOjE2MjkyODMwMDQsImV4cCI6MTYzMDQ5MjYwNH0.XR-B1od6_rJlqVYuaP-VR3yFxM4L6HADxzFBIdHb-Lc",
+      },
+    }
+  );
+  const products = await response.json();
+  console.log(products);
+  productsArr = products;
+  displayProducts(products);
+};
         </script>
         <script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
